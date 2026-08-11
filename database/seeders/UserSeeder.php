@@ -10,7 +10,7 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         User::query()->firstOrCreate(
-            ['email' => 'admin@example.co.nz'],
+            ['email' => 'admin@javaroyalefashions.co.nz'],
             [
                 'name' => 'Store Admin',
                 'password' => 'password', // hashed via the 'hashed' cast — change this immediately after first login
