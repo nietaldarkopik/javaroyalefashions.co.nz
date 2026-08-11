@@ -1,0 +1,391 @@
+/* ============================================================
+   Admin theme — Shopee-inspired skin over AdminLTE 3.
+   AdminLTE still provides the structure (sidebar/navbar/content-
+   wrapper/footer, grid, cards, tables, forms) — this file only
+   overrides colors, radius, shadows and typography so it reads as
+   a clean marketplace-style seller console instead of the default
+   AdminLTE blue/dark theme.
+   ============================================================ */
+
+:root {
+  --shopee-orange: #EE4D2D;
+  --shopee-orange-dark: #D8431F;
+  --shopee-orange-light: #FFF1EE;
+  --shopee-bg: #F5F5F5;
+  --shopee-text: #222222;
+  --shopee-text-muted: #757575;
+  --shopee-border: #EEEEEE;
+}
+
+body, .content-wrapper {
+  font-family: 'Nunito Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+  background-color: var(--shopee-bg) !important;
+  color: var(--shopee-text);
+}
+
+a { color: var(--shopee-orange); }
+a:hover { color: var(--shopee-orange-dark); }
+
+/* ---------- Top navbar ---------- */
+.main-header.navbar {
+  background: #ffffff !important;
+  border-bottom: 1px solid var(--shopee-border);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+.main-header .nav-link {
+  color: var(--shopee-text) !important;
+}
+
+/* ---------- Sidebar ---------- */
+.main-sidebar {
+  background: #ffffff !important;
+  border-right: 1px solid var(--shopee-border);
+  box-shadow: 1px 0 3px rgba(0, 0, 0, 0.03);
+}
+.brand-link {
+  border-bottom: 1px solid var(--shopee-border) !important;
+}
+.brand-text {
+  color: var(--shopee-orange) !important;
+  font-weight: 800;
+}
+.sidebar-dark-primary,
+.sidebar-light-primary {
+  background: #ffffff;
+}
+.nav-sidebar > .nav-item > .nav-link,
+.sidebar .nav-link {
+  color: #4a4a4a;
+  border-radius: 6px;
+  margin: 2px 8px;
+  width: auto;
+}
+.nav-sidebar > .nav-item > .nav-link:hover,
+.sidebar .nav-link:hover {
+  background: var(--shopee-orange-light);
+  color: var(--shopee-orange-dark);
+}
+.nav-sidebar > .nav-item > .nav-link.active {
+  background: var(--shopee-orange-light) !important;
+  color: var(--shopee-orange) !important;
+  font-weight: 700;
+  box-shadow: none;
+}
+.nav-sidebar .nav-icon {
+  color: inherit;
+}
+.nav-sidebar .nav-header {
+  color: #b5b5b5;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-weight: 800;
+}
+.user-panel .info a {
+  color: var(--shopee-text) !important;
+}
+
+/* ---------- Cards ---------- */
+.card {
+  border: 1px solid var(--shopee-border);
+  border-radius: 10px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+.card-header {
+  background: #ffffff;
+  border-bottom: 1px solid var(--shopee-border);
+  border-top-left-radius: 10px !important;
+  border-top-right-radius: 10px !important;
+  font-weight: 700;
+  color: var(--shopee-text);
+}
+.card.mb-3, .card.mb-0 { overflow: hidden; }
+
+/* ---------- Buttons ---------- */
+.btn {
+  border-radius: 6px;
+  font-weight: 600;
+}
+.btn-primary {
+  background: var(--shopee-orange);
+  border-color: var(--shopee-orange);
+}
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary:active {
+  background: var(--shopee-orange-dark) !important;
+  border-color: var(--shopee-orange-dark) !important;
+}
+.btn-outline-secondary {
+  color: var(--shopee-text-muted);
+  border-color: #d9d9d9;
+}
+.btn-outline-secondary:hover {
+  background: var(--shopee-bg);
+  color: var(--shopee-text);
+  border-color: #d9d9d9;
+}
+.btn-success { background: #26AA99; border-color: #26AA99; }
+.btn-danger  { background: #EE4D2D; border-color: #EE4D2D; }
+
+/* ---------- Form controls ---------- */
+.form-control:focus,
+.custom-select:focus {
+  border-color: var(--shopee-orange);
+  box-shadow: 0 0 0 0.2rem rgba(238, 77, 45, 0.15);
+}
+.form-control, .custom-select {
+  border-radius: 6px;
+  border-color: #d9d9d9;
+}
+
+/* ---------- Tables ---------- */
+.table thead th {
+  background: #FAFAFA;
+  color: var(--shopee-text-muted);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  font-weight: 700;
+  border-bottom: 1px solid var(--shopee-border);
+  border-top: none;
+}
+.table td, .table th {
+  border-top: 1px solid var(--shopee-border);
+  vertical-align: middle;
+}
+.table-hover tbody tr:hover {
+  background-color: var(--shopee-orange-light);
+}
+
+/* ---------- Badges (soft pill style, not solid blocks) ---------- */
+.badge {
+  border-radius: 999px;
+  font-weight: 700;
+  padding: 5px 10px;
+  font-size: 11px;
+  letter-spacing: 0.02em;
+}
+.badge.bg-secondary { background: #F0F0F0 !important; color: #757575 !important; }
+.badge.bg-warning   { background: #FFF3D6 !important; color: #C88A00 !important; }
+.badge.bg-info      { background: #E6F6F4 !important; color: #10847E !important; }
+.badge.bg-primary   { background: #FFF1EE !important; color: var(--shopee-orange) !important; }
+.badge.bg-success   { background: #E7F7ED !important; color: #1F9254 !important; }
+.badge.bg-danger    { background: #FDEBE9 !important; color: #D0342C !important; }
+
+/* ---------- Dashboard stat cards (replaces heavy AdminLTE small-box) ---------- */
+.small-box {
+  border-radius: 10px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  background: #ffffff !important;
+  color: var(--shopee-text) !important;
+  border: 1px solid var(--shopee-border);
+}
+.small-box .inner h3,
+.small-box .inner p {
+  color: var(--shopee-text) !important;
+}
+.small-box .icon {
+  color: rgba(238, 77, 45, 0.15) !important;
+}
+.small-box > .small-box-footer {
+  background: transparent !important;
+  color: var(--shopee-orange) !important;
+  border-top: 1px solid var(--shopee-border);
+  font-weight: 700;
+}
+.small-box > .small-box-footer:hover {
+  background: var(--shopee-orange-light) !important;
+}
+/* stat card accent stripe replaces the old full-color background */
+.small-box.bg-success { border-top: 3px solid #1F9254; }
+.small-box.bg-warning { border-top: 3px solid #FFA800; }
+.small-box.bg-info    { border-top: 3px solid #10847E; }
+.small-box.bg-secondary,
+.small-box.bg-primary  { border-top: 3px solid var(--shopee-orange); }
+
+/* ---------- Content header ---------- */
+.content-header h1 {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--shopee-text);
+}
+
+/* ---------- Footer ---------- */
+.main-footer {
+  background: #ffffff;
+  border-top: 1px solid var(--shopee-border);
+  color: var(--shopee-text-muted);
+  font-size: 13px;
+}
+
+/* ---------- Login page ---------- */
+.login-page {
+  background: var(--shopee-bg);
+}
+.login-logo b {
+  color: var(--shopee-orange);
+}
+.login-box .card {
+  border-radius: 12px;
+}
+
+/* ---------- Image upload dropzones (product image / gallery) ---------- */
+.upload-dropzone {
+  position: relative;
+  border: 2px dashed #d9d9d9;
+  border-radius: 10px;
+  background: #FAFAFA;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 140px;
+  padding: 12px;
+  transition: border-color 0.15s ease, background 0.15s ease;
+  overflow: hidden;
+}
+.upload-dropzone:hover,
+.upload-dropzone.is-dragover {
+  border-color: var(--shopee-orange);
+  background: var(--shopee-orange-light);
+}
+.upload-dropzone--gallery {
+  min-height: 100px;
+}
+.upload-placeholder {
+  text-align: center;
+  color: var(--shopee-text-muted);
+  font-size: 13px;
+}
+.upload-placeholder i {
+  display: block;
+  font-size: 26px;
+  margin-bottom: 8px;
+  color: #c9c9c9;
+}
+.upload-preview img {
+  width: 100%;
+  max-height: 220px;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+.gallery-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.gallery-thumb {
+  position: relative;
+  width: 76px;
+  height: 76px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--shopee-border);
+}
+.gallery-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.gallery-thumb-remove {
+  position: absolute;
+  inset: 0;
+  top: auto;
+  width: 100%;
+  border: none;
+  background: rgba(0, 0, 0, 0.55);
+  color: #fff;
+  font-size: 12px;
+  padding: 4px 0;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+.gallery-thumb:hover .gallery-thumb-remove {
+  opacity: 1;
+}
+.gallery-thumb--pending {
+  border-style: dashed;
+  border-color: var(--shopee-orange);
+  opacity: 0.85;
+}
+.gallery-thumb-badge {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  background: var(--shopee-orange);
+  color: #fff;
+  font-size: 9px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 999px;
+  text-transform: uppercase;
+}
+
+/* ---------- Variant rows (product edit page) ---------- */
+.variant-row {
+  border: 1px solid var(--shopee-border);
+  border-radius: 8px;
+  padding: 14px;
+  margin-bottom: 12px;
+  background: #FCFCFC;
+}
+.variant-row .variant-thumb {
+  width: 56px;
+  height: 56px;
+  border-radius: 6px;
+  object-fit: cover;
+  border: 1px solid var(--shopee-border);
+}
+
+/* ---------- Pagination (custom Shopee-style paginator) ---------- */
+.shopee-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  padding: 4px 0;
+}
+.shopee-pagination .page-btn,
+.shopee-pagination .page-dots {
+  min-width: 34px;
+  height: 34px;
+  padding: 0 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  border: 1px solid #d9d9d9;
+  background: #fff;
+  color: var(--shopee-text);
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+}
+.shopee-pagination .page-btn:hover {
+  border-color: var(--shopee-orange);
+  color: var(--shopee-orange);
+}
+.shopee-pagination .page-btn.active {
+  background: var(--shopee-orange);
+  border-color: var(--shopee-orange);
+  color: #fff;
+}
+.shopee-pagination .page-btn.disabled {
+  color: #cfcfcf;
+  border-color: #eee;
+  pointer-events: none;
+}
+.shopee-pagination .page-dots {
+  border: none;
+  background: none;
+  color: #b5b5b5;
+}
+.shopee-pagination-meta {
+  text-align: center;
+  color: var(--shopee-text-muted);
+  font-size: 12px;
+  margin-top: 8px;
+}
