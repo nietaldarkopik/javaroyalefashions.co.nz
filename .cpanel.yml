@@ -1,0 +1,8 @@
+---
+deployment:
+  tasks:
+    - cd /home/javaroya/public_html && composer install --no-dev --optimize-autoloader --no-interaction
+    - cd /home/javaroya/public_html && php artisan optimize:clear
+    - cd /home/javaroya/public_html && php artisan config:cache
+    - cd /home/javaroya/public_html && php artisan route:cache
+    - cd /home/javaroya/public_html && php artisan view:cache
