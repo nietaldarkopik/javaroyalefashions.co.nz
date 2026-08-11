@@ -5,6 +5,27 @@
 @section('content')
 
 <section class="hero">
+  @forelse ($heroSlides as $slide)
+  <div class="hero-slide @if ($loop->first) active @endif">
+    @if ($slide->image_path)
+    <div class="ph"><img src="{{ Storage::disk('public')->url($slide->image_path) }}" alt="{{ $slide->heading }}"></div>
+    @else
+    <div class="ph"><span>HERO PHOTO — 1600×900</span></div>
+    @endif
+    <div class="hero-content">
+      @if ($slide->eyebrow)
+      <span class="eyebrow">{{ $slide->eyebrow }}</span>
+      @endif
+      <h1>{{ $slide->heading }}</h1>
+      @if ($slide->subheading)
+      <p>{{ $slide->subheading }}</p>
+      @endif
+      @if ($slide->button_text && $slide->button_url)
+      <a href="{{ $slide->button_url }}" class="btn">{{ $slide->button_text }}</a>
+      @endif
+    </div>
+  </div>
+  @empty
   <div class="hero-slide active">
     <div class="ph"><span>HERO PHOTO — 1600×900</span></div>
     <div class="hero-content">
@@ -14,6 +35,7 @@
       <a href="{{ route('products.index') }}" class="btn">Shop All Products</a>
     </div>
   </div>
+  @endforelse
   <div class="hero-dots"></div>
 </section>
 

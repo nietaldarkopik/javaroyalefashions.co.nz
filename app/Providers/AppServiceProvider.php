@@ -4,12 +4,14 @@ namespace App\Providers;
 
 use App\Repositories\Contracts\CategoryRepositoryInterface;
 use App\Repositories\Contracts\CustomerRepositoryInterface;
+use App\Repositories\Contracts\HeroSlideRepositoryInterface;
 use App\Repositories\Contracts\OrderRepositoryInterface;
 use App\Repositories\Contracts\PageRepositoryInterface;
 use App\Repositories\Contracts\ProductRepositoryInterface;
 use App\Repositories\Contracts\SettingRepositoryInterface;
 use App\Repositories\Eloquent\CategoryRepository;
 use App\Repositories\Eloquent\CustomerRepository;
+use App\Repositories\Eloquent\HeroSlideRepository;
 use App\Repositories\Eloquent\OrderRepository;
 use App\Repositories\Eloquent\PageRepository;
 use App\Repositories\Eloquent\ProductRepository;
@@ -36,6 +38,7 @@ class AppServiceProvider extends ServiceProvider
     private const REPOSITORY_BINDINGS = [
         PageRepositoryInterface::class => PageRepository::class,
         CategoryRepositoryInterface::class => CategoryRepository::class,
+        HeroSlideRepositoryInterface::class => HeroSlideRepository::class,
         ProductRepositoryInterface::class => ProductRepository::class,
         OrderRepositoryInterface::class => OrderRepository::class,
         CustomerRepositoryInterface::class => CustomerRepository::class,

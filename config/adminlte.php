@@ -342,6 +342,11 @@ return [
         ],
         ['header' => 'Content'],
         [
+            'text' => 'Hero Slides',
+            'route' => 'admin.hero-slides.index',
+            'icon' => 'fas fa-fw fa-images',
+        ],
+        [
             'text' => 'Pages',
             'route' => 'admin.pages.index',
             'icon' => 'fas fa-fw fa-file-alt',
