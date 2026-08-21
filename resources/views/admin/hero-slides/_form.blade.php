@@ -7,7 +7,7 @@
 
 <div class="mb-3">
     <label class="form-label">Heading</label>
-    <input type="text" name="heading" class="form-control" value="{{ old('heading', $heroSlide?->heading) }}" required>
+    <input type="text" name="heading" class="form-control" value="{{ old('heading', $heroSlide?->heading) }}">
 </div>
 
 <div class="mb-3">

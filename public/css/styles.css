@@ -126,6 +126,7 @@ ul {
   height: 100%;
   object-fit: cover;
   transition: transform 0.6s cubic-bezier(.25, .8, .25, 1);
+  object-position: top center;
 }
 
 /* ---------- Top announcement bar ---------- */
@@ -548,7 +549,8 @@ nav.main-nav>a:hover::after,
 /* ---------- Hero ---------- */
 .hero {
   position: relative;
-  min-height: 640px;
+  min-height: 100vh;
+  min-height: 100svh;
   display: flex;
   align-items: flex-end;
 }
@@ -1685,7 +1687,6 @@ footer.site {
 .hero-slide.active {
   opacity: 1;
   visibility: visible;
-  position: relative;
 }
 
 .hero-dots {

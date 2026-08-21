@@ -15,7 +15,7 @@ class UpdateHeroSlideRequest extends FormRequest
     {
         return [
             'eyebrow' => ['nullable', 'string', 'max:60'],
-            'heading' => ['required', 'string', 'max:191'],
+            'heading' => ['nullable', 'string', 'max:191'],
             'subheading' => ['nullable', 'string'],
             'button_text' => ['nullable', 'string', 'max:60'],
             'button_url' => ['nullable', 'string', 'max:255'],
