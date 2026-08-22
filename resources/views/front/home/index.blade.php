@@ -95,6 +95,9 @@
 </section>
 @endif
 
+@forelse ($contentBanners as $banner)
+<x-content-banner :banner="$banner" />
+@empty
 <section class="video-banner reveal">
   <div class="ph"><span>BANNER PHOTO — 1920×1080</span></div>
   <div class="video-banner-content">
@@ -104,6 +107,7 @@
     <a href="{{ route('pages.show', 'about') }}" class="btn">Read Our Story</a>
   </div>
 </section>
+@endforelse
 
 <section class="badges reveal">
   <div class="wrap badge-grid">

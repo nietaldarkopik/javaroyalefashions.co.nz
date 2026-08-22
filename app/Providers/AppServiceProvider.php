@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Repositories\Contracts\CategoryRepositoryInterface;
+use App\Repositories\Contracts\ContentBannerRepositoryInterface;
 use App\Repositories\Contracts\CustomerRepositoryInterface;
 use App\Repositories\Contracts\HeroSlideRepositoryInterface;
 use App\Repositories\Contracts\OrderRepositoryInterface;
@@ -10,6 +11,7 @@ use App\Repositories\Contracts\PageRepositoryInterface;
 use App\Repositories\Contracts\ProductRepositoryInterface;
 use App\Repositories\Contracts\SettingRepositoryInterface;
 use App\Repositories\Eloquent\CategoryRepository;
+use App\Repositories\Eloquent\ContentBannerRepository;
 use App\Repositories\Eloquent\CustomerRepository;
 use App\Repositories\Eloquent\HeroSlideRepository;
 use App\Repositories\Eloquent\OrderRepository;
@@ -18,9 +20,11 @@ use App\Repositories\Eloquent\ProductRepository;
 use App\Repositories\Eloquent\SettingRepository;
 use App\Services\CartService;
 use App\Services\CategoryService;
+use App\Services\ContentBannerService;
 use App\Services\SettingService;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
@@ -39,6 +43,7 @@ class AppServiceProvider extends ServiceProvider
         PageRepositoryInterface::class => PageRepository::class,
         CategoryRepositoryInterface::class => CategoryRepository::class,
         HeroSlideRepositoryInterface::class => HeroSlideRepository::class,
+        ContentBannerRepositoryInterface::class => ContentBannerRepository::class,
         ProductRepositoryInterface::class => ProductRepository::class,
         OrderRepositoryInterface::class => OrderRepository::class,
         CustomerRepositoryInterface::class => CustomerRepository::class,
@@ -83,6 +88,7 @@ class AppServiceProvider extends ServiceProvider
         // view too makes it available in the child's own scope as well.
         View::composer(['layouts.front', 'layouts.checkout', 'front.*'], function ($view) {
             $cart = app(CartService::class);
+            $bannerPage = $this->resolveContentBannerPage();
 
             $view->with([
                 'siteSetting' => app(SettingService::class)->current(),
@@ -90,6 +96,9 @@ class AppServiceProvider extends ServiceProvider
                 'cartCount' => $cart->totalQuantity(),
                 'miniCartItems' => $cart->items(),
                 'miniCartSubtotal' => $cart->subtotal(),
+                'contentBanners' => $bannerPage
+                    ? app(ContentBannerService::class)->forPage($bannerPage)
+                    : collect(),
             ]);
         });
 
@@ -107,7 +116,9 @@ class AppServiceProvider extends ServiceProvider
             Config::set('adminlte.title', $setting->site_name);
             Config::set('adminlte.title_prefix', '');
             Config::set('adminlte.title_postfix', ' Admin');
-            Config::set('adminlte.logo', '<b>'.e($setting->site_name).'</b>');
+            // adminlte.logo (the site name text next to the sidebar logo)
+            // is intentionally left unset — config/adminlte.php defaults it
+            // to '' so only the logo image shows.
 
             if ($setting->logo_path) {
                 // Setting::logo_path is relative to the 'public' disk root
@@ -120,5 +131,23 @@ class AppServiceProvider extends ServiceProvider
 
             $view->with('setting', $setting);
         });
+    }
+
+    /**
+     * Maps the current route to one of ContentBanner::PAGES' keys, or null
+     * if this page doesn't support content banners at all. Route-based
+     * rather than passed in per-controller so every front page gets banner
+     * support automatically — including 'about'/'contact', which share one
+     * controller action (PageController::show) distinguished only by slug.
+     */
+    private function resolveContentBannerPage(): ?string
+    {
+        return match (true) {
+            Route::currentRouteName() === 'home' => 'home',
+            Route::currentRouteName() === 'products.index' => 'products',
+            Route::currentRouteName() === 'pages.show' && request()->route('slug') === 'about' => 'about',
+            Route::currentRouteName() === 'pages.show' && request()->route('slug') === 'contact' => 'contact',
+            default => null,
+        };
     }
 }

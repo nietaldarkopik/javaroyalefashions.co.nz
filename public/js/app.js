@@ -2,8 +2,11 @@
 // Adapted from the ANYAM/benangjarum-style static template. Anything that
 // used to fake cart/checkout state in JS (quick-add counters, a client-side
 // "submit" that redirected without hitting a server) has been removed —
-// those actions are now real <form> submits to Laravel routes, so the
-// browser's native submit must be allowed to happen.
+// those actions are real <form> submits to Laravel routes. Add-to-cart forms
+// are enhanced to submit via fetch (still hitting the real cart.add route and
+// rendering the real server response) purely so the page doesn't reload and
+// a fly-to-cart/shake animation can play; if that fetch fails for any reason
+// the code falls back to a genuine form.submit() so the action still works.
 
 document.addEventListener('DOMContentLoaded', () => {
 
@@ -56,6 +59,100 @@ document.addEventListener('DOMContentLoaded', () => {
   cartOpenBtns.forEach(btn => btn.addEventListener('click', (e) => { e.preventDefault(); openCart(); }));
   cartCloseBtn && cartCloseBtn.addEventListener('click', closeCart);
   cartBackdrop && cartBackdrop.addEventListener('click', closeCart);
+
+  /* ---------- Add to cart: fly-to-cart + shake feedback ---------- */
+  const cartIconBtn = document.querySelector('[data-cart-open]');
+  const cartCountEl = document.querySelector('.cart-count');
+  const cartBodyEl = cartDrawer ? cartDrawer.querySelector('.cart-body') : null;
+  const cartFootEl = cartDrawer ? cartDrawer.querySelector('.cart-foot') : null;
+
+  function shakeCartIcon(){
+    if (!cartIconBtn) return;
+    cartIconBtn.classList.remove('cart-shake');
+    void cartIconBtn.offsetWidth; // restart the animation even if it's already mid-shake
+    cartIconBtn.classList.add('cart-shake');
+  }
+  cartIconBtn && cartIconBtn.addEventListener('animationend', (e) => {
+    if (e.animationName === 'cart-shake') cartIconBtn.classList.remove('cart-shake');
+  });
+
+  // Flies a plain dot from the clicked button itself (never the product
+  // photo) so the effect always fires — a "Quick Add" card or an
+  // out-of-stock placeholder has no image to animate from otherwise.
+  function flyToCart(sourceBtn){
+    if (!sourceBtn || !cartIconBtn) { shakeCartIcon(); return; }
+    const startRect = sourceBtn.getBoundingClientRect();
+    const endRect = cartIconBtn.getBoundingClientRect();
+    if (!startRect.width || !startRect.height) { shakeCartIcon(); return; }
+
+    const size = 20;
+    const flyer = document.createElement('div');
+    flyer.className = 'cart-fly-item';
+    flyer.style.left = (startRect.left + startRect.width / 2 - size / 2) + 'px';
+    flyer.style.top = (startRect.top + startRect.height / 2 - size / 2) + 'px';
+    flyer.style.width = size + 'px';
+    flyer.style.height = size + 'px';
+    document.body.appendChild(flyer);
+
+    requestAnimationFrame(() => {
+      const dx = (endRect.left + endRect.width / 2) - (startRect.left + startRect.width / 2);
+      const dy = (endRect.top + endRect.height / 2) - (startRect.top + startRect.height / 2);
+      flyer.style.transform = `translate(${dx}px, ${dy}px) scale(0.3)`;
+      flyer.style.opacity = '0';
+    });
+
+    let cleaned = false;
+    const cleanup = () => {
+      if (cleaned) return;
+      cleaned = true;
+      flyer.remove();
+      shakeCartIcon();
+    };
+    flyer.addEventListener('transitionend', cleanup, { once: true });
+    setTimeout(cleanup, 800); // fallback in case transitionend doesn't fire
+  }
+
+  document.querySelectorAll('form.add-to-cart-form').forEach(form => {
+    form.addEventListener('submit', (e) => {
+      const submitBtn = form.querySelector('button[type="submit"]');
+      if (submitBtn && submitBtn.disabled) return;
+
+      e.preventDefault();
+      const originalLabel = submitBtn ? submitBtn.textContent : null;
+      if (submitBtn) submitBtn.disabled = true;
+
+      fetch(form.action, {
+        method: 'POST',
+        body: new FormData(form),
+        headers: { 'Accept': 'application/json' },
+        credentials: 'same-origin',
+      })
+        .then(res => {
+          if (!res.ok) throw new Error('Add to cart request failed');
+          return res.json();
+        })
+        .then(data => {
+          if (cartCountEl && typeof data.count !== 'undefined') cartCountEl.textContent = data.count;
+          if (cartBodyEl && typeof data.bodyHtml === 'string') cartBodyEl.innerHTML = data.bodyHtml;
+          if (cartFootEl && typeof data.footHtml === 'string') cartFootEl.innerHTML = data.footHtml;
+
+          flyToCart(submitBtn);
+
+          if (submitBtn) {
+            submitBtn.textContent = 'Added ✓';
+            setTimeout(() => {
+              submitBtn.textContent = originalLabel;
+              submitBtn.disabled = false;
+            }, 1100);
+          }
+        })
+        .catch(() => {
+          // Real fallback: submit the form for real so the action never silently breaks.
+          if (submitBtn) { submitBtn.disabled = false; }
+          form.submit();
+        });
+    });
+  });
 
   /* ---------- Promo popup (decorative email capture — no backend) ---------- */
   const promoPopup = document.querySelector('.promo-popup');

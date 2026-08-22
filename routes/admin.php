@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\ContentBannerController;
 use App\Http\Controllers\Admin\CustomerController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\HeroSlideController;
@@ -34,6 +35,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::resource('pages', PageController::class)->except(['show']);
         Route::resource('categories', CategoryController::class)->except(['show']);
         Route::resource('hero-slides', HeroSlideController::class)->except(['show']);
+        Route::resource('content-banners', ContentBannerController::class)->except(['show']);
 
         Route::resource('products', ProductController::class)->except(['show']);
         Route::delete('products/{product}/images/{image}', [ProductImageController::class, 'destroy'])

@@ -17,7 +17,7 @@
         @if ($product->hasVariants())
         <a href="{{ route('products.show', $product->slug) }}" class="quick-add">Choose Options</a>
         @elseif ($product->is_in_stock)
-        <form action="{{ route('cart.add') }}" method="POST">
+        <form action="{{ route('cart.add') }}" method="POST" class="add-to-cart-form">
             @csrf
             <input type="hidden" name="product_id" value="{{ $product->id }}">
             <input type="hidden" name="quantity" value="1">

@@ -63,7 +63,7 @@ return [
     |
     */
 
-    'logo' => '<b>Javaroyale</b> Fashions',
+    'logo' => '',
     'logo_img' => 'vendor/adminlte/dist/img/AdminLTELogo.png',
     'logo_img_class' => 'brand-image img-circle elevation-3',
     'logo_img_xl' => null,
@@ -344,6 +344,11 @@ return [
         [
             'text' => 'Hero Slides',
             'route' => 'admin.hero-slides.index',
+            'icon' => 'fas fa-fw fa-images',
+        ],
+        [
+            'text' => 'Content Banners',
+            'route' => 'admin.content-banners.index',
             'icon' => 'fas fa-fw fa-images',
         ],
         [

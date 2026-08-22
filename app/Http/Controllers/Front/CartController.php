@@ -6,7 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Front\AddToCartRequest;
 use App\Http\Requests\Front\UpdateCartRequest;
 use App\Services\CartService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 class CartController extends Controller
@@ -23,13 +25,17 @@ class CartController extends Controller
         ]);
     }
 
-    public function add(AddToCartRequest $request): RedirectResponse
+    public function add(AddToCartRequest $request): RedirectResponse|JsonResponse
     {
         $this->cart->add(
             $request->integer('product_id'),
             $request->integer('quantity', 1),
             $request->filled('variant_id') ? $request->integer('variant_id') : null,
         );
+
+        if ($request->wantsJson()) {
+            return response()->json($this->drawerPayload());
+        }
 
         return back()->with('status', 'Added to cart.');
     }
@@ -46,5 +52,20 @@ class CartController extends Controller
         $this->cart->remove($lineKey);
 
         return back()->with('status', 'Item removed from cart.');
+    }
+
+    private function drawerPayload(): array
+    {
+        $items = $this->cart->items();
+        $subtotal = $this->cart->subtotal();
+
+        return [
+            'count' => $this->cart->totalQuantity(),
+            'bodyHtml' => view('front.cart._drawer_body', ['miniCartItems' => $items])->render(),
+            'footHtml' => view('front.cart._drawer_foot', [
+                'miniCartItems' => $items,
+                'miniCartSubtotal' => $subtotal,
+            ])->render(),
+        ];
     }
 }

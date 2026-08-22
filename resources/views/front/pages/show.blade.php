@@ -32,6 +32,10 @@
   @endif
 </div>
 
+@foreach ($contentBanners as $banner)
+<x-content-banner :banner="$banner" />
+@endforeach
+
 <section class="badges reveal">
   <div class="wrap badge-grid">
     <div class="badge-item"><div class="icon"><i class="fa-solid fa-star"></i></div><p>Carefully selected, quality products</p></div>

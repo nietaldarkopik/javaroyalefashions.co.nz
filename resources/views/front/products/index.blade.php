@@ -61,4 +61,8 @@
   @endif
 </div>
 
+@foreach ($contentBanners as $banner)
+<x-content-banner :banner="$banner" />
+@endforeach
+
 @endsection

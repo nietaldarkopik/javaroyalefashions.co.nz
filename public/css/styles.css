@@ -1615,6 +1615,44 @@ footer.site {
 }
 
 /* ============================================
+   Add to cart feedback (fly-to-cart + shake)
+   ============================================ */
+@keyframes cart-shake {
+  0%, 100% { transform: rotate(0deg) scale(1); }
+  20% { transform: rotate(-16deg) scale(1.15); }
+  40% { transform: rotate(14deg) scale(1.15); }
+  60% { transform: rotate(-10deg) scale(1.08); }
+  80% { transform: rotate(6deg) scale(1.05); }
+}
+
+.icon-btn.cart-shake {
+  animation: cart-shake 0.6s ease;
+  transform-origin: 50% 50%;
+}
+
+.cart-fly-item {
+  position: fixed;
+  z-index: 999;
+  border-radius: 50%;
+  background: var(--rust);
+  pointer-events: none;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+  transition: transform 0.7s cubic-bezier(.31, 1.2, .55, 1), opacity 0.7s ease;
+  transform: translate(0, 0) scale(1);
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .icon-btn.cart-shake {
+    animation: none !important;
+  }
+  .cart-fly-item {
+    transition: none !important;
+    display: none;
+  }
+}
+
+/* ============================================
    Search overlay
    ============================================ */
 .search-overlay {
