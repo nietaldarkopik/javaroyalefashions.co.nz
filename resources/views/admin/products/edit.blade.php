@@ -14,5 +14,12 @@
     </div>
 </div>
 
+{{-- Kept outside the form above: a <form> nested inside another <form> is invalid HTML and
+     browsers close the outer one at the first nested </form>, silently detaching Save Product. --}}
+<form id="image-delete-form" method="POST" style="display:none;">
+    @csrf
+    @method('DELETE')
+</form>
+
 @include('admin.products._variants', ['product' => $product])
 @endsection

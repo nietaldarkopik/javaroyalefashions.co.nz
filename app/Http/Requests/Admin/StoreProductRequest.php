@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Admin;
 
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreProductRequest extends FormRequest
@@ -31,5 +32,16 @@ class StoreProductRequest extends FormRequest
             'meta_title' => ['nullable', 'string', 'max:255'],
             'meta_description' => ['nullable', 'string', 'max:255'],
         ];
+    }
+
+    public function withValidator(Validator $validator): void
+    {
+        $validator->after(function (Validator $validator) {
+            $total = ($this->hasFile('image') ? 1 : 0) + count($this->file('gallery_images', []));
+
+            if ($total > 10) {
+                $validator->errors()->add('gallery_images', 'A product can have at most 10 images in total (including the primary image).');
+            }
+        });
     }
 }

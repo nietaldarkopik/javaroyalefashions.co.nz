@@ -254,6 +254,26 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
+  /* ---------- Gallery thumbnail slider arrows (product page) ---------- */
+  document.querySelectorAll('.gallery-thumbs-wrap').forEach(wrap => {
+    const strip = wrap.querySelector('.gallery-thumbs');
+    const prevBtn = wrap.querySelector('.gallery-thumbs-arrow--prev');
+    const nextBtn = wrap.querySelector('.gallery-thumbs-arrow--next');
+    if (!strip || !prevBtn || !nextBtn) return;
+
+    const updateArrows = () => {
+      const scrollable = strip.scrollWidth > strip.clientWidth + 1;
+      prevBtn.classList.toggle('is-hidden', !scrollable || strip.scrollLeft <= 0);
+      nextBtn.classList.toggle('is-hidden', !scrollable || strip.scrollLeft + strip.clientWidth >= strip.scrollWidth - 1);
+    };
+
+    prevBtn.addEventListener('click', () => strip.scrollBy({ left: -strip.clientWidth, behavior: 'smooth' }));
+    nextBtn.addEventListener('click', () => strip.scrollBy({ left: strip.clientWidth, behavior: 'smooth' }));
+    strip.addEventListener('scroll', updateArrows);
+    window.addEventListener('resize', updateArrows);
+    updateArrows();
+  });
+
   /* ---------- Quantity stepper (drives a real number input) ---------- */
   document.querySelectorAll('.qty-stepper').forEach(stepper => {
     const input = stepper.querySelector('input[type="number"]');

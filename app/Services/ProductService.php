@@ -96,6 +96,10 @@ class ProductService
 
         foreach ($product->variants as $variant) {
             $this->deleteFile($variant->image_path);
+
+            foreach ($variant->images as $image) {
+                $this->deleteFile($image->image_path);
+            }
         }
 
         $this->products->delete($product);
@@ -108,16 +112,26 @@ class ProductService
         $image->delete();
     }
 
-    public function createVariant(Product $product, array $data, ?UploadedFile $image): ProductVariant
+    /**
+     * @param  UploadedFile[]  $galleryImages
+     */
+    public function createVariant(Product $product, array $data, ?UploadedFile $image, array $galleryImages = []): ProductVariant
     {
         if ($image) {
             $data['image_path'] = $image->store('products/variants', 'public');
         }
 
-        return $product->variants()->create($data);
+        $variant = $product->variants()->create($data);
+
+        $this->attachVariantGalleryImages($variant, $galleryImages);
+
+        return $variant;
     }
 
-    public function updateVariant(ProductVariant $variant, array $data, ?UploadedFile $image): ProductVariant
+    /**
+     * @param  UploadedFile[]  $galleryImages
+     */
+    public function updateVariant(ProductVariant $variant, array $data, ?UploadedFile $image, array $galleryImages = []): ProductVariant
     {
         if ($image) {
             $this->deleteFile($variant->image_path);
@@ -126,13 +140,27 @@ class ProductService
 
         $variant->update($data);
 
+        $this->attachVariantGalleryImages($variant, $galleryImages);
+
         return $variant->fresh();
     }
 
     public function deleteVariant(ProductVariant $variant): void
     {
         $this->deleteFile($variant->image_path);
+
+        foreach ($variant->images as $image) {
+            $this->deleteFile($image->image_path);
+        }
+
         $variant->delete();
+    }
+
+    public function deleteVariantGalleryImage(ProductVariant $variant, int $imageId): void
+    {
+        $image = $variant->images()->findOrFail($imageId);
+        $this->deleteFile($image->image_path);
+        $image->delete();
     }
 
     private function uniqueSlug(string $name, ?int $ignoreId = null): string
@@ -164,6 +192,21 @@ class ProductService
         foreach ($galleryImages as $index => $file) {
             $product->images()->create([
                 'image_path' => $file->store('products', 'public'),
+                'sort_order' => $nextOrder + $index,
+            ]);
+        }
+    }
+
+    /**
+     * @param  UploadedFile[]  $galleryImages
+     */
+    private function attachVariantGalleryImages(ProductVariant $variant, array $galleryImages): void
+    {
+        $nextOrder = $variant->images()->max('sort_order') + 1;
+
+        foreach ($galleryImages as $index => $file) {
+            $variant->images()->create([
+                'image_path' => $file->store('products/variants', 'public'),
                 'sort_order' => $nextOrder + $index,
             ]);
         }

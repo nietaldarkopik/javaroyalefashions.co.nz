@@ -45,13 +45,13 @@ class ProductRepository implements ProductRepositoryInterface
     public function findBySlug(string $slug): ?Product
     {
         return Product::query()->active()
-            ->with(['category', 'images', 'variants' => fn ($q) => $q->active()])
+            ->with(['category', 'images', 'variants' => fn ($q) => $q->active()->with('images')])
             ->where('slug', $slug)->first();
     }
 
     public function findById(int $id): ?Product
     {
-        return Product::query()->with(['images', 'variants'])->find($id);
+        return Product::query()->with(['images', 'variants.images'])->find($id);
     }
 
     public function featured(int $limit = 8): Collection

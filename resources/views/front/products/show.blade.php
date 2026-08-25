@@ -39,6 +39,11 @@
           if ($variant->image_path && ! $galleryThumbs->contains('path', $variant->image_path)) {
               $galleryThumbs->push(['path' => $variant->image_path, 'variant_id' => $variant->id]);
           }
+          foreach ($variant->images as $variantImage) {
+              if (! $galleryThumbs->contains('path', $variantImage->image_path)) {
+                  $galleryThumbs->push(['path' => $variantImage->image_path, 'variant_id' => $variant->id]);
+              }
+          }
       }
     @endphp
 
@@ -53,14 +58,22 @@
         </div>
       </div>
       @if ($galleryThumbs->isNotEmpty())
-      <div class="gallery-thumbs">
-        @foreach ($galleryThumbs as $index => $thumb)
-        <div class="ph thumb @if ($index === 0) active @endif"
-             data-full-image="{{ Storage::disk('public')->url($thumb['path']) }}"
-             @if ($thumb['variant_id']) data-variant-id="{{ $thumb['variant_id'] }}" @endif>
-          <img src="{{ Storage::disk('public')->url($thumb['path']) }}" alt="{{ $product->name }}">
+      <div class="gallery-thumbs-wrap">
+        <button type="button" class="gallery-thumbs-arrow gallery-thumbs-arrow--prev" aria-label="Scroll thumbnails left">
+          <i class="fa-solid fa-chevron-left"></i>
+        </button>
+        <div class="gallery-thumbs">
+          @foreach ($galleryThumbs as $index => $thumb)
+          <div class="ph thumb @if ($index === 0) active @endif"
+               data-full-image="{{ Storage::disk('public')->url($thumb['path']) }}"
+               @if ($thumb['variant_id']) data-variant-id="{{ $thumb['variant_id'] }}" @endif>
+            <img src="{{ Storage::disk('public')->url($thumb['path']) }}" alt="{{ $product->name }}">
+          </div>
+          @endforeach
         </div>
-        @endforeach
+        <button type="button" class="gallery-thumbs-arrow gallery-thumbs-arrow--next" aria-label="Scroll thumbnails right">
+          <i class="fa-solid fa-chevron-right"></i>
+        </button>
       </div>
       @endif
     </div>

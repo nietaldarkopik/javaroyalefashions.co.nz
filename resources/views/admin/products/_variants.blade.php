@@ -53,7 +53,33 @@
                         <button type="submit" class="btn btn-sm btn-outline-primary">Save</button>
                     </div>
                 </div>
+
+                <div class="mt-2">
+                    <div class="upload-dropzone upload-dropzone--gallery" data-dropzone data-preview-target="variant-gallery-preview-{{ $variant->id }}">
+                        <div class="upload-placeholder">
+                            <i class="fas fa-images"></i>
+                            <span>Gallery images — multiple allowed ({{ $variant->images->count() }}/10)</span>
+                        </div>
+                        <input type="file" name="gallery_images[]" accept="image/*" multiple hidden>
+                    </div>
+                    <div class="gallery-grid mt-2" id="variant-gallery-preview-{{ $variant->id }}"></div>
+                </div>
             </form>
+
+            @if ($variant->images->isNotEmpty())
+            <div class="gallery-grid mt-2">
+                @foreach ($variant->images as $vImage)
+                <div class="gallery-thumb">
+                    <img src="{{ Storage::disk('public')->url($vImage->image_path) }}" alt="">
+                    <form action="{{ route('admin.products.variants.images.destroy', [$product, $variant, $vImage]) }}" method="POST" onsubmit="return confirm('Remove this image?');">
+                        @csrf @method('DELETE')
+                        <button type="submit" class="gallery-thumb-remove"><i class="fas fa-trash"></i> Remove</button>
+                    </form>
+                </div>
+                @endforeach
+            </div>
+            @endif
+
             <form action="{{ route('admin.products.variants.destroy', [$product, $variant]) }}" method="POST" class="text-right mt-1" onsubmit="return confirm('Delete this variant?');">
                 @csrf
                 @method('DELETE')
@@ -100,6 +126,56 @@
                     <button type="submit" class="btn btn-sm btn-primary">Add Variant</button>
                 </div>
             </div>
+
+            <div class="mt-2">
+                <div class="upload-dropzone upload-dropzone--gallery" data-dropzone data-preview-target="new-variant-gallery-preview">
+                    <div class="upload-placeholder">
+                        <i class="fas fa-images"></i>
+                        <span>Gallery images (optional) — multiple allowed</span>
+                    </div>
+                    <input type="file" name="gallery_images[]" accept="image/*" multiple hidden>
+                </div>
+                <div class="gallery-grid mt-2" id="new-variant-gallery-preview"></div>
+            </div>
         </form>
     </div>
 </div>
+
+<script>
+(function () {
+    function wireDropzone(zone) {
+        const input = zone.querySelector('input[type="file"]');
+        const preview = zone.dataset.previewTarget ? document.getElementById(zone.dataset.previewTarget) : null;
+        if (!input) return;
+
+        zone.addEventListener('click', () => input.click());
+        zone.addEventListener('dragover', (e) => { e.preventDefault(); zone.classList.add('is-dragover'); });
+        zone.addEventListener('dragleave', () => zone.classList.remove('is-dragover'));
+        zone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            zone.classList.remove('is-dragover');
+            if (e.dataTransfer.files && e.dataTransfer.files.length) {
+                input.files = e.dataTransfer.files;
+                input.dispatchEvent(new Event('change'));
+            }
+        });
+
+        input.addEventListener('change', () => {
+            if (!preview) return;
+            preview.innerHTML = '';
+            Array.from(input.files).forEach((file) => {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const div = document.createElement('div');
+                    div.className = 'gallery-thumb gallery-thumb--pending';
+                    div.innerHTML = '<img src="' + e.target.result + '" alt=""><span class="gallery-thumb-badge">New</span>';
+                    preview.appendChild(div);
+                };
+                reader.readAsDataURL(file);
+            });
+        });
+    }
+
+    document.querySelectorAll('[data-dropzone]').forEach(wireDropzone);
+})();
+</script>

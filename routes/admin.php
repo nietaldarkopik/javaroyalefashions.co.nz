@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\PageController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\ProductImageController;
 use App\Http\Controllers\Admin\ProductVariantController;
+use App\Http\Controllers\Admin\ProductVariantImageController;
 use App\Http\Controllers\Admin\SettingController;
 use Illuminate\Support\Facades\Route;
 
@@ -47,6 +48,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
             ->name('products.variants.update');
         Route::delete('products/{product}/variants/{variant}', [ProductVariantController::class, 'destroy'])
             ->name('products.variants.destroy');
+        Route::delete('products/{product}/variants/{variant}/images/{image}', [ProductVariantImageController::class, 'destroy'])
+            ->name('products.variants.images.destroy');
 
         Route::get('orders', [OrderController::class, 'index'])->name('orders.index');
         Route::get('orders/{order}', [OrderController::class, 'show'])->name('orders.show');

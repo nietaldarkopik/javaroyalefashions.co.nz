@@ -20,8 +20,9 @@ class ProductVariantController extends Controller
     {
         $this->products->createVariant(
             $product,
-            $request->safe()->except('image'),
+            $request->safe()->except(['image', 'gallery_images']),
             $request->file('image'),
+            $request->file('gallery_images', []),
         );
 
         return back()->with('status', 'Variant added.');
@@ -33,8 +34,9 @@ class ProductVariantController extends Controller
 
         $this->products->updateVariant(
             $variant,
-            $request->safe()->except('image'),
+            $request->safe()->except(['image', 'gallery_images']),
             $request->file('image'),
+            $request->file('gallery_images', []),
         );
 
         return back()->with('status', 'Variant updated.');

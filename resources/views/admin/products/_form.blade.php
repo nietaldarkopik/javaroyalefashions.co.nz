@@ -100,10 +100,9 @@
                 @foreach ($product->images as $image)
                 <div class="gallery-thumb">
                     <img src="{{ Storage::disk('public')->url($image->image_path) }}" alt="">
-                    <form action="{{ route('admin.products.images.destroy', [$product, $image]) }}" method="POST" onsubmit="return confirm('Remove this image?');">
-                        @csrf @method('DELETE')
-                        <button type="submit" class="gallery-thumb-remove"><i class="fas fa-trash"></i> Remove</button>
-                    </form>
+                    <button type="button" class="gallery-thumb-remove" data-delete-url="{{ route('admin.products.images.destroy', [$product, $image]) }}">
+                        <i class="fas fa-trash"></i> Remove
+                    </button>
                 </div>
                 @endforeach
             </div>
@@ -169,6 +168,16 @@
                 preview.appendChild(div);
             };
             reader.readAsDataURL(file);
+        });
+    });
+
+    document.querySelectorAll('.gallery-thumb-remove[data-delete-url]').forEach((btn) => {
+        btn.addEventListener('click', () => {
+            if (!confirm('Remove this image?')) return;
+            const form = document.getElementById('image-delete-form');
+            if (!form) return;
+            form.action = btn.dataset.deleteUrl;
+            form.submit();
         });
     });
 })();
