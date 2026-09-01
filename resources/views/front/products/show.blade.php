@@ -198,7 +198,7 @@
 
       @if ($siteSetting->contact_whatsapp)
       <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $siteSetting->contact_whatsapp) }}?text={{ urlencode('Hi, I\'m interested in '.$product->name.'. Could you tell me more about it, including custom design/pattern options?') }}"
-         target="_blank" rel="noopener" class="btn btn--outline" style="width:100%; margin-top:12px; display:flex; align-items:center; justify-content:center; gap:8px;">
+         target="_blank" rel="noopener" class="btn btn--outline" style="width:100%; margin-bottom:12px; display:flex; align-items:center; justify-content:center; gap:8px;">
         <i class="fa-brands fa-whatsapp"></i> Ask on WhatsApp — Custom Design Available
       </a>
       @endif

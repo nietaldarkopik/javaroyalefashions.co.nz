@@ -920,6 +920,10 @@ nav.main-nav>a:hover::after,
   color: var(--ink-soft);
 }
 
+.product-card .product-info {
+  padding: 10px;
+}
+
 .product-card h4 {
   font-family: var(--font-display);
   font-size: 15px;
@@ -1671,11 +1675,27 @@ footer.site {
    Add to cart feedback (fly-to-cart + shake)
    ============================================ */
 @keyframes cart-shake {
-  0%, 100% { transform: rotate(0deg) scale(1); }
-  20% { transform: rotate(-16deg) scale(1.15); }
-  40% { transform: rotate(14deg) scale(1.15); }
-  60% { transform: rotate(-10deg) scale(1.08); }
-  80% { transform: rotate(6deg) scale(1.05); }
+
+  0%,
+  100% {
+    transform: rotate(0deg) scale(1);
+  }
+
+  20% {
+    transform: rotate(-16deg) scale(1.15);
+  }
+
+  40% {
+    transform: rotate(14deg) scale(1.15);
+  }
+
+  60% {
+    transform: rotate(-10deg) scale(1.08);
+  }
+
+  80% {
+    transform: rotate(6deg) scale(1.05);
+  }
 }
 
 .icon-btn.cart-shake {
@@ -1699,6 +1719,7 @@ footer.site {
   .icon-btn.cart-shake {
     animation: none !important;
   }
+
   .cart-fly-item {
     transition: none !important;
     display: none;

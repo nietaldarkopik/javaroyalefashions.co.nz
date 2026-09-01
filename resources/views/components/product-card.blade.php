@@ -28,14 +28,16 @@
         @endif
     </div>
 
-    <a href="{{ route('products.show', $product->slug) }}"><h4>{{ $product->name }}</h4></a>
-    <div class="price">
-        @if ($product->hasVariants())
-        From ${{ number_format($product->price_range['min'], 2) }}
-        @elseif ($product->is_on_sale)
-        <span class="was">${{ number_format($product->price, 2) }}</span>${{ number_format($product->sale_price, 2) }}
-        @else
-        ${{ number_format($product->price, 2) }}
-        @endif
+    <div class="product-info">
+        <a href="{{ route('products.show', $product->slug) }}"><h4>{{ $product->name }}</h4></a>
+        <div class="price">
+            @if ($product->hasVariants())
+            From ${{ number_format($product->price_range['min'], 2) }}
+            @elseif ($product->is_on_sale)
+            <span class="was">${{ number_format($product->price, 2) }}</span>${{ number_format($product->sale_price, 2) }}
+            @else
+            ${{ number_format($product->price, 2) }}
+            @endif
+        </div>
     </div>
 </div>
