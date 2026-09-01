@@ -1,5 +1,5 @@
 @if ($paginator->hasPages())
-<div style="display:flex; justify-content:center; gap:8px; margin-top:32px; flex-wrap:wrap;">
+<div style="display:flex; justify-content:center; gap:8px; margin-top:32px; margin-bottom:32px; flex-wrap:wrap;">
     @if ($paginator->onFirstPage())
     <span class="chip" style="opacity:0.4;"><i class="fa-solid fa-chevron-left"></i> Prev</span>
     @else
