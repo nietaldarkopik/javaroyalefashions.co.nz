@@ -31,10 +31,6 @@
   </div>
 </div>
 
-<div class="announce">
-  FLAT RATE SHIPPING &nbsp;·&nbsp; URBAN ${{ number_format($siteSetting->shipping_urban_rate, 2) }} &nbsp;·&nbsp; RURAL ${{ number_format($siteSetting->shipping_rural_rate, 2) }}
-</div>
-
 <header class="site">
   <div class="wrap header-inner px-5">
     <button class="menu-toggle" aria-label="Open menu"><i class="fa-solid fa-bars"></i></button>

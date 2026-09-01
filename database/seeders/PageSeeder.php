@@ -13,7 +13,7 @@ class PageSeeder extends Seeder
             [
                 'slug' => 'about',
                 'title' => 'About Us',
-                'content' => '<p>We are a New Zealand based business bringing you a carefully curated catalog of quality products, shipped nationwide.</p><p>Replace this placeholder copy with your real About Us content from the admin panel.</p>',
+                'content' => '<p>Java Royale Fashion is a New Zealand-based fashion brand offering quality fashion and personalised customer support design services. We work with skilled designers and trusted production partners in Indonesia to create and carefully select pieces for the New Zealand market.</p><p>From ready-to-wear to custom designs, we combine Indonesian craftsmanship with contemporary style, focusing on quality, individuality, and thoughtful design.</p>',
             ],
             [
                 'slug' => 'contact',
