@@ -55,6 +55,15 @@ enum OrderStatus: string
         };
     }
 
+    /**
+     * Whether payment for this order has been confirmed and it hasn't been
+     * cancelled — the only orders a customer may be invited to review.
+     */
+    public function isReviewable(): bool
+    {
+        return in_array($this, [self::Paid, self::Processing, self::Completed], true);
+    }
+
     public function canTransitionTo(self $next): bool
     {
         return in_array($next, $this->allowedTransitions(), true);

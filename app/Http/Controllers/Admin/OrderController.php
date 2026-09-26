@@ -31,7 +31,7 @@ class OrderController extends Controller
     public function show(Order $order): View
     {
         return view('admin.orders.show', [
-            'order' => $order->load(['customer', 'items.product', 'paymentProofs', 'verifiedBy']),
+            'order' => $order->load(['customer', 'items.product', 'paymentProofs', 'verifiedBy', 'reviewInvitation', 'productReviews']),
             'statuses' => OrderStatus::options(),
         ]);
     }

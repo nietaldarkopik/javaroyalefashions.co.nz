@@ -4,6 +4,7 @@ use App\Http\Controllers\Front\CartController;
 use App\Http\Controllers\Front\CategoryController;
 use App\Http\Controllers\Front\CheckoutController;
 use App\Http\Controllers\Front\HomeController;
+use App\Http\Controllers\Front\OrderReviewController;
 use App\Http\Controllers\Front\PageController;
 use App\Http\Controllers\Front\ProductController;
 use Illuminate\Support\Facades\Route;
@@ -36,6 +37,12 @@ Route::prefix('checkout')->name('checkout.')->group(function () {
     Route::post('/', [CheckoutController::class, 'store'])->name('store');
     Route::get('/{orderNumber}/success', [CheckoutController::class, 'success'])->name('success');
     Route::post('/{orderNumber}/proof', [CheckoutController::class, 'uploadProof'])->name('proof');
+});
+
+// Order review page, reached only via the emailed invitation link.
+Route::prefix('review/order')->name('reviews.order.')->where(['token' => '[A-Za-z0-9]{64}'])->group(function () {
+    Route::get('/{token}', [OrderReviewController::class, 'show'])->middleware('throttle:review-page')->name('show');
+    Route::post('/{token}', [OrderReviewController::class, 'store'])->middleware('throttle:review-submit')->name('store');
 });
 
 require __DIR__.'/admin.php';

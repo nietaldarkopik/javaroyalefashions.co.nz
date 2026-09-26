@@ -83,6 +83,15 @@
       <span class="eyebrow">{{ $product->category->name }}</span>
       @endif
       <h1>{{ $product->name }}</h1>
+      <a href="#reviews" class="pd-rating">
+        @if ($reviewSummary['count'] > 0)
+        <x-star-rating :rating="$reviewSummary['average']" />
+        <span>{{ number_format($reviewSummary['average'], 1) }} ({{ $reviewSummary['count'] }} {{ Str::plural('review', $reviewSummary['count']) }})</span>
+        @else
+        <x-star-rating :rating="0" />
+        <span>No reviews yet</span>
+        @endif
+      </a>
       <div class="pd-price">
         <span id="pd-price-amount">
           @if ($product->is_on_sale)
@@ -234,6 +243,10 @@
 
   </div>
 </div>
+
+<div class="stitch"></div>
+
+@include('front.products._reviews')
 
 <div class="stitch"></div>
 

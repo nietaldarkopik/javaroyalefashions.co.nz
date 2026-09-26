@@ -15,6 +15,7 @@
 </head>
 <body>
 
+{{-- Promo popup disabled for now; remove this comment wrapper to show it again.
 <div class="promo-popup-backdrop"></div>
 <div class="promo-popup">
   <button class="promo-popup-close" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
@@ -30,6 +31,7 @@
     <a href="#" class="promo-popup-skip" data-promo-skip>Maybe later</a>
   </div>
 </div>
+--}}
 
 <header class="site">
   <div class="wrap header-inner px-5">

@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Support\Collection;
 
 class Order extends Model
 {
@@ -72,9 +74,47 @@ class Order extends Model
         return $this->belongsTo(User::class, 'verified_by');
     }
 
+    public function reviewInvitation(): HasOne
+    {
+        return $this->hasOne(ReviewInvitation::class);
+    }
+
+    public function productReviews(): HasMany
+    {
+        return $this->hasMany(ProductReview::class);
+    }
+
     public function latestPaymentProof(): ?PaymentProof
     {
         return $this->paymentProofs->first();
+    }
+
+    public function isReviewable(): bool
+    {
+        return $this->status->isReviewable();
+    }
+
+    /**
+     * The order's reviewable lines, one per product: lines for the same
+     * product bought in several variants collapse into one (the first
+     * line), since a review is per product per order. Lines whose product
+     * has since been deleted are skipped — there's no page to show a
+     * review on.
+     *
+     * @return Collection<int, array{item: OrderItem, variant_labels: Collection<int, string>}> keyed by product_id
+     */
+    public function reviewableItems(): Collection
+    {
+        $items = $this->relationLoaded('items') ? $this->items : $this->items()->with('product')->get();
+
+        return collect($items)
+            ->filter(fn (OrderItem $item) => $item->product_id !== null)
+            ->sortBy('id')
+            ->groupBy('product_id')
+            ->map(fn (Collection $lines) => [
+                'item' => $lines->first(),
+                'variant_labels' => $lines->pluck('variant_label')->filter()->unique()->values(),
+            ]);
     }
 
     public function scopeStatus($query, ?string $status)

@@ -340,6 +340,16 @@ return [
             'route' => 'admin.customers.index',
             'icon' => 'fas fa-fw fa-users',
         ],
+        [
+            'text' => 'Product Reviews',
+            'route' => 'admin.reviews.index',
+            'icon' => 'fas fa-fw fa-star',
+        ],
+        [
+            'text' => 'Review Invitations',
+            'route' => 'admin.review-invitations.index',
+            'icon' => 'fas fa-fw fa-envelope-open-text',
+        ],
         ['header' => 'Content'],
         [
             'text' => 'Hero Slides',

@@ -98,6 +98,79 @@
             </div>
         </div>
 
+        @php
+            $invitation = $order->reviewInvitation;
+            $invitationStatus = $invitation?->status() ?? \App\Enums\ReviewInvitationStatus::NotSent;
+            $reviewLines = $order->reviewableItems();
+            $reviewsByProduct = $order->productReviews->keyBy('product_id');
+        @endphp
+        <div class="card mb-3">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <span>Product Reviews</span>
+                <span class="badge bg-{{ $invitationStatus->badgeColor() }}">{{ $invitationStatus->label() }}</span>
+            </div>
+            <div class="card-body">
+                @if ($invitation)
+                <dl class="small mb-3">
+                    @if ($invitation->sent_at)
+                    <dt>Last sent</dt>
+                    <dd>{{ $invitation->sent_at->format('d M Y H:i') }} to {{ $invitation->customer_email }}
+                        @if ($invitation->send_count > 1)<span class="text-muted">({{ $invitation->send_count }} times)</span>@endif
+                    </dd>
+                    <dt>Link expires</dt>
+                    <dd>{{ $invitation->expires_at->format('d M Y H:i') }}</dd>
+                    @endif
+                    @if ($invitation->completed_at)
+                    <dt>Completed</dt>
+                    <dd>{{ $invitation->completed_at->format('d M Y H:i') }}</dd>
+                    @endif
+                    @if ($invitation->last_error && (! $invitation->sent_at || $invitation->last_failed_at?->gt($invitation->sent_at)))
+                    <dt class="text-danger">Last send failed</dt>
+                    <dd class="text-danger">{{ $invitation->last_failed_at?->format('d M Y H:i') }} &mdash; {{ $invitation->last_error }}</dd>
+                    @endif
+                </dl>
+                @endif
+
+                <ul class="list-unstyled small mb-3">
+                    @forelse ($reviewLines as $productId => $line)
+                    @php
+                        $review = $reviewsByProduct->get($productId);
+                    @endphp
+                    <li class="d-flex justify-content-between align-items-center border-bottom py-1">
+                        <span>{{ $line['item']->product_name }}</span>
+                        @if ($review)
+                        <a href="{{ route('admin.reviews.index', ['order' => $order->order_number]) }}" class="badge bg-{{ $review->status->badgeColor() }}">
+                            {{ $review->rating }}&#9733; &middot; {{ $review->status->label() }}
+                        </a>
+                        @else
+                        <span class="badge bg-light text-dark border">Not reviewed</span>
+                        @endif
+                    </li>
+                    @empty
+                    <li class="text-muted">No products in this order can be reviewed.</li>
+                    @endforelse
+                </ul>
+
+                @if (! $order->isReviewable())
+                <p class="text-muted small mb-0">Review invitations can be sent once payment is confirmed (Paid, Processing or Completed).</p>
+                @elseif ($reviewLines->isNotEmpty() && ! $invitation?->completed_at)
+                    @if ($invitation?->sent_at)
+                    <form action="{{ route('admin.orders.review-invitation', $order) }}" method="POST"
+                          onsubmit="return confirm({{ Js::from('Email a new review link to '.$order->customer_email.'? The previous link will stop working.') }});">
+                        @csrf
+                        <input type="hidden" name="resend" value="1">
+                        <button type="submit" class="btn btn-outline-primary btn-sm w-100"><i class="fas fa-redo"></i> Resend Review Invitation</button>
+                    </form>
+                    @else
+                    <form action="{{ route('admin.orders.review-invitation', $order) }}" method="POST">
+                        @csrf
+                        <button type="submit" class="btn btn-primary btn-sm w-100"><i class="fas fa-envelope"></i> Send Review Invitation</button>
+                    </form>
+                    @endif
+                @endif
+            </div>
+        </div>
+
         <div class="card">
             <div class="card-header">Update Status</div>
             <div class="card-body">

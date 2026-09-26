@@ -10,8 +10,10 @@ use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\PageController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\ProductImageController;
+use App\Http\Controllers\Admin\ProductReviewController;
 use App\Http\Controllers\Admin\ProductVariantController;
 use App\Http\Controllers\Admin\ProductVariantImageController;
+use App\Http\Controllers\Admin\ReviewInvitationController;
 use App\Http\Controllers\Admin\SettingController;
 use Illuminate\Support\Facades\Route;
 
@@ -55,6 +57,12 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('orders/{order}', [OrderController::class, 'show'])->name('orders.show');
         Route::patch('orders/{order}/status', [OrderController::class, 'updateStatus'])->name('orders.status');
         Route::post('orders/{order}/verify-payment', [OrderController::class, 'verifyPayment'])->name('orders.verify');
+        Route::post('orders/{order}/review-invitation', [ReviewInvitationController::class, 'store'])->name('orders.review-invitation');
+
+        Route::get('reviews', [ProductReviewController::class, 'index'])->name('reviews.index');
+        Route::patch('reviews/{review}/status', [ProductReviewController::class, 'updateStatus'])->name('reviews.status');
+        Route::delete('reviews/{review}', [ProductReviewController::class, 'destroy'])->name('reviews.destroy');
+        Route::get('review-invitations', [ReviewInvitationController::class, 'index'])->name('review-invitations.index');
 
         Route::get('customers', [CustomerController::class, 'index'])->name('customers.index');
         Route::get('customers/{customer}', [CustomerController::class, 'show'])->name('customers.show');

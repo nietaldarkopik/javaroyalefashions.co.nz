@@ -9,6 +9,8 @@ use App\Repositories\Contracts\HeroSlideRepositoryInterface;
 use App\Repositories\Contracts\OrderRepositoryInterface;
 use App\Repositories\Contracts\PageRepositoryInterface;
 use App\Repositories\Contracts\ProductRepositoryInterface;
+use App\Repositories\Contracts\ProductReviewRepositoryInterface;
+use App\Repositories\Contracts\ReviewInvitationRepositoryInterface;
 use App\Repositories\Contracts\SettingRepositoryInterface;
 use App\Repositories\Eloquent\CategoryRepository;
 use App\Repositories\Eloquent\ContentBannerRepository;
@@ -17,13 +19,18 @@ use App\Repositories\Eloquent\HeroSlideRepository;
 use App\Repositories\Eloquent\OrderRepository;
 use App\Repositories\Eloquent\PageRepository;
 use App\Repositories\Eloquent\ProductRepository;
+use App\Repositories\Eloquent\ProductReviewRepository;
+use App\Repositories\Eloquent\ReviewInvitationRepository;
 use App\Repositories\Eloquent\SettingRepository;
 use App\Services\CartService;
 use App\Services\CategoryService;
 use App\Services\ContentBannerService;
 use App\Services\SettingService;
+use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Http\Request;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\View;
@@ -48,6 +55,8 @@ class AppServiceProvider extends ServiceProvider
         OrderRepositoryInterface::class => OrderRepository::class,
         CustomerRepositoryInterface::class => CustomerRepository::class,
         SettingRepositoryInterface::class => SettingRepository::class,
+        ProductReviewRepositoryInterface::class => ProductReviewRepository::class,
+        ReviewInvitationRepositoryInterface::class => ReviewInvitationRepository::class,
     ];
 
     public function register(): void
@@ -75,6 +84,16 @@ class AppServiceProvider extends ServiceProvider
         // pagination passes 'components.pagination' explicitly per call,
         // so it's unaffected by this default.
         Paginator::defaultView('vendor.pagination.admin-shopee');
+
+        // Review links are unauthenticated, so throttle per IP: viewing is
+        // cheap but still capped to blunt token-guessing, and submitting
+        // is kept tight to stop a leaked link being used to flood the
+        // moderation queue.
+        RateLimiter::for('review-page', fn (Request $request) => Limit::perMinute(30)->by($request->ip()));
+        RateLimiter::for('review-submit', fn (Request $request) => [
+            Limit::perMinute(5)->by($request->ip()),
+            Limit::perHour(20)->by($request->ip()),
+        ]);
 
         // Data every storefront page needs (site name/contact info for the
         // header & footer, nav categories, cart badge count) lives here

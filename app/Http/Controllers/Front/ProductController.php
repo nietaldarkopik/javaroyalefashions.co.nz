@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Front;
 
 use App\Http\Controllers\Controller;
 use App\Services\CategoryService;
+use App\Services\ProductReviewService;
 use App\Services\ProductService;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -13,6 +14,7 @@ class ProductController extends Controller
     public function __construct(
         private readonly ProductService $products,
         private readonly CategoryService $categories,
+        private readonly ProductReviewService $reviews,
     ) {}
 
     public function index(Request $request): View
@@ -33,6 +35,8 @@ class ProductController extends Controller
         return view('front.products.show', [
             'product' => $product,
             'relatedProducts' => $this->products->related($product),
+            'reviews' => $this->reviews->approvedForProduct($product),
+            'reviewSummary' => $this->reviews->approvedSummaryForProduct($product),
         ]);
     }
 }
