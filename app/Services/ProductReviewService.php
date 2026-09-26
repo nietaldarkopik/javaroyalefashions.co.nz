@@ -175,7 +175,7 @@ class ProductReviewService
 
     public function approvedForProduct(Product $product): LengthAwarePaginator
     {
-        return $this->reviews->approvedForProduct($product, config('reviews.per_page'));
+        return $this->reviews->approvedForProduct($product, config('reviews.per_page', 5));
     }
 
     /**

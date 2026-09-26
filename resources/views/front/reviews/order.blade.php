@@ -108,21 +108,21 @@
           <div class="form-row">
             <label for="title-{{ $productId }}">Review title <span class="optional">(optional)</span></label>
             <input type="text" id="title-{{ $productId }}" name="reviews[{{ $productId }}][title]"
-                   maxlength="{{ config('reviews.title_max') }}" value="{{ old("{$field}.title") }}" placeholder="Sum it up in a few words">
+                   maxlength="{{ config('reviews.title_max', 120) }}" value="{{ old("{$field}.title") }}" placeholder="Sum it up in a few words">
             @error("{$field}.title")<span class="field-error">{{ $message }}</span>@enderror
           </div>
 
           <div class="form-row">
             <label for="comment-{{ $productId }}">Your review</label>
             <textarea id="comment-{{ $productId }}" name="reviews[{{ $productId }}][comment]" rows="4"
-                      maxlength="{{ config('reviews.comment_max') }}" placeholder="What did you like? How's the fit and quality?">{{ old("{$field}.comment") }}</textarea>
+                      maxlength="{{ config('reviews.comment_max', 2000) }}" placeholder="What did you like? How's the fit and quality?">{{ old("{$field}.comment") }}</textarea>
             @error("{$field}.comment")<span class="field-error">{{ $message }}</span>@enderror
           </div>
 
           <div class="form-row">
             <label for="name-{{ $productId }}">Name shown with your review</label>
             <input type="text" id="name-{{ $productId }}" name="reviews[{{ $productId }}][customer_name]"
-                   maxlength="{{ config('reviews.name_max') }}" value="{{ old("{$field}.customer_name", $defaultName) }}">
+                   maxlength="{{ config('reviews.name_max', 80) }}" value="{{ old("{$field}.customer_name", $defaultName) }}">
             @error("{$field}.customer_name")<span class="field-error">{{ $message }}</span>@enderror
           </div>
         </div>

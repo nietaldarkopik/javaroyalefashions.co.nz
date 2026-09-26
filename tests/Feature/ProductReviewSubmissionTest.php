@@ -88,11 +88,11 @@ class ProductReviewSubmissionTest extends TestCase
         ])->assertSessionHasErrors("{$key}.rating");
 
         $this->post(route('reviews.order.store', $token), [
-            'reviews' => [$product->id => $this->reviewPayload(str_repeat('x', config('reviews.comment_max') + 1))],
+            'reviews' => [$product->id => $this->reviewPayload(str_repeat('x', config('reviews.comment_max', 2000) + 1))],
         ])->assertSessionHasErrors("{$key}.comment");
 
         $this->post(route('reviews.order.store', $token), [
-            'reviews' => [$product->id => ['title' => str_repeat('t', config('reviews.title_max') + 1)] + $this->reviewPayload()],
+            'reviews' => [$product->id => ['title' => str_repeat('t', config('reviews.title_max', 120) + 1)] + $this->reviewPayload()],
         ])->assertSessionHasErrors("{$key}.title");
 
         $this->assertDatabaseCount('product_reviews', 0);

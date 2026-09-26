@@ -47,7 +47,7 @@ class ReviewInvitationService
 
         $token = Str::random(64);
         $tokenHash = ReviewInvitation::hashToken($token);
-        $expiresAt = now()->addDays(config('reviews.invitation_expiry_days'));
+        $expiresAt = now()->addDays(config('reviews.invitation_expiry_days', 30));
 
         try {
             $invitation = DB::transaction(function () use ($order, $resend, $tokenHash, $expiresAt) {

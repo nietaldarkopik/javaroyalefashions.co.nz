@@ -45,10 +45,10 @@ class SubmitOrderReviewsRequest extends FormRequest
 
     public function rules(): array
     {
-        $nameMax = config('reviews.name_max');
-        $titleMax = config('reviews.title_max');
-        $commentMin = config('reviews.comment_min');
-        $commentMax = config('reviews.comment_max');
+        $nameMax = config('reviews.name_max', 80);
+        $titleMax = config('reviews.title_max', 120);
+        $commentMin = config('reviews.comment_min', 5);
+        $commentMax = config('reviews.comment_max', 2000);
 
         return [
             'reviews' => ['required', 'array', 'max:100'],
