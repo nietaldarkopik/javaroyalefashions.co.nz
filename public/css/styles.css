@@ -1403,11 +1403,12 @@ footer.site {
 .size-opt {
   min-width: 48px;
   height: 42px;
-  padding: 0 12px;
+  padding: 10px;
   border: 1px solid var(--line);
   background: var(--white);
   font-size: 13px;
   border-radius: var(--radius-pill);
+  text-align: center;
 }
 
 .size-opt.active {
@@ -2519,7 +2520,7 @@ footer.site {
   font-size: 18px;
 }
 
-.reviews-summary > p {
+.reviews-summary>p {
   font-size: 13px;
   color: var(--ink-soft);
   margin: 8px 0 20px;
@@ -2774,8 +2775,8 @@ footer.site {
 }
 
 .star-input label:hover,
-.star-input label:hover ~ label,
-.star-input input:checked ~ label {
+.star-input label:hover~label,
+.star-input input:checked~label {
   color: var(--gold);
 }
 
@@ -2783,7 +2784,7 @@ footer.site {
   transform: scale(1.1);
 }
 
-.star-input input:focus-visible + label {
+.star-input input:focus-visible+label {
   outline: 2px solid var(--ink);
   outline-offset: 2px;
   border-radius: 4px;
